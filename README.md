@@ -1,7 +1,7 @@
-# py-eagle-mqtt
+# py-eagle-mqtt (rpi4)
 Python3 based Docker for Eagle to MQTT reader
 
-I have only ported this into a dockerfile, All Original code (with one minor modification for XML root tag) is credit to [Ted Drain - TD22057](https://github.com/TD22057/T-Home).
+I only ported this to rPI4. Evanrich ported this into a dockerfile, All Original code (with one minor modification for XML root tag) is credit to [Ted Drain - TD22057](https://github.com/TD22057/T-Home).
 
 ## UPDATES:
 

@@ -1,0 +1,15 @@
+[Unit]
+Description=Python based Eagle-200 to MQTT
+After=docker.service
+Requires=docker.service
+
+[Service]
+TimeoutStartSec=0
+Restart=always
+ExecStartPre=-/usr/bin/docker stop py-eagle-mqtt
+ExecStartPre=-/usr/bin/docker rm py-eagle-mqtt
+ExecStart=/usr/bin/docker run --name=py-eagle-mqtt -e MQTT_BROKER_IP=mqtt.vonk -e MQTT_BROKER_PORT=1883 -e KEEPALIVE=60 -e MQTT_USER=mqtt -e MQTT_PASSWORD=GjRqHdcZM5UnxJ38 -p 22042:22042 py-eagle-mqtt:0.1
+
+[Install]
+WantedBy=multi-user.target
+	

@@ -8,13 +8,20 @@ I only ported this to rPI4. [Evanrich ported this](https://github.com/evanrich/p
 
 Clone the git repository to your Raspberry Pi.
 
-Build the docker image.
+Build the docker image
+```bash
+docker build -t py-eagle-mqtt:0.1 Dockler
+```
 
-Copy `systemd/py-eagle-mqtt.service` to `/etc/systemd/system/`
-Enable the service `sudo systemctl enable py-eagle-mqtt`
-Start the service `sudo systemctl start py-eagle-mqtt`
-Check the status `sudo systemctrl status py-eagle-mqtt`
-Check that it is listening on port 22042 `netstat -lt` (may not show tcp, but only tcp6, that's ok)
+The details of the container can be found in `systemd/py-eagle-mqtt.service`.  Install and start the systemd service
+```bash
+sudo cp systemd/py-eagle-mqtt.service /etc/systemd/system/
+sudo systemctl enable py-eagle-mqtt
+sudo systemctl start py-eagle-mqtt
+sudo systemctrl status py-eagle-mqtt
+```
+
+Check that it is listening on port 22042 (`netstat -lt`).  Note that `netstat` incorrectly doesn't always show the tcp port, but will sho the tcp6 port as listening.
 
 Go to the [Rainforest Portal](https://portal.rainforestcloud.com/user/settings), and add a custom upload destination
   - Protocol = HTTPS

@@ -1,9 +1,61 @@
 # py-eagle-mqtt (rpi4)
-Python3 based Docker for Eagle to MQTT reader
 
-I only ported this to rPI4. Evanrich ported this into a dockerfile, All Original code (with one minor modification for XML root tag) is credit to [Ted Drain - TD22057](https://github.com/TD22057/T-Home).
+Python3 based Docker for Eagle to MQTT reader.
 
-## UPDATES:
+I only ported this to rPI4. [Evanrich ported this](https://github.com/evanrich/py-eagle-mqtt) into a dockerfile, All Original code (with one minor modification for XML root tag) is credit to [Ted Drain - TD22057](https://github.com/TD22057/T-Home).
+
+## Installing
+
+Clone the git repository to your Raspberry Pi.
+
+Build the docker image.
+
+Copy `systemd/py-eagle-mqtt.service` to `/etc/systemd/system/`
+Enable the service `sudo systemctl enable py-eagle-mqtt`
+Start the service `sudo systemctl start py-eagle-mqtt`
+Check the status `sudo systemctrl status py-eagle-mqtt`
+Check that it is listening on port 22042 `netstat -lt` (may not show tcp, but only tcp6, that's ok)
+
+Go to the [Rainforest Portal](https://portal.rainforestcloud.com/user/settings), and add a custom upload destination
+  - Protocol = HTTPS
+  - Hostname = your *public* hostname (use e.g. pound on your access router to forward)
+  - URL = /
+  - port = 443
+  - no username or password
+  - Format = XML (Raw)
+
+## Configure Home Assistant
+
+A replacement for the `rainforest_eagle` on Home Asistant.
+
+First, [configure your MQTT broker](https://www.home-assistant.io/docs/mqtt/broker/). 
+
+To use this with Home Assistant, expand `configuration.yaml` with
+```yaml
+sensor:
+  - platform: mqtt
+    name: "Total pwr"
+    state_topic: "power/elec/Home/power"
+    unit_of_measurement: 'W'
+    device_class: power
+    value_template: "{{ value_json.power }}"
+  - platform: mqtt
+    name: "Total kWh"
+    state_topic: "power/elec/Home/energy"
+    unit_of_measurement: 'kWh'
+    device_class: power
+    value_template: "{{ value_json.consumed }}"
+  - platform: mqtt
+    name: "Price per kWh"
+    state_topic: "power/elec/Home/price"
+    unit_of_measurement: '$/kWh'
+    device_class: power
+    value_template: "{{ value_json.price }}"
+```
+
+FYI I host both the `py-eagle-mqtt` and `hassio` on a Raspberry Pi 4 ([link](https://community.home-assistant.io/t/rpi-4-installation/123514/87)) running of an external NVMe.
+
+## UPDATES from Evanrich:
 
 2020-03-23: Updated astral to 2.1, bumped version to 1.6.4
 
